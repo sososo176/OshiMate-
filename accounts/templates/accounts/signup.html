@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>新規登録</title>
+</head>
+<body>
+    <h1>新規登録</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="email">メールアドレス:</label><br>
+        <input type="email" id="email" name="email"><br><br>
+
+        <label for="password">パスワード:</label><br>
+        <input type="password" id="password" name="password"><br><br>
+
+        <button type="submit">登録</button>
+    </form>
+    <p>アカウントをお持ちの方は <a href="{% url 'accounts:login' %}">ログイン</a></p>
+</body>
+</html>
