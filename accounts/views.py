@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import SignUpForm
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
+from items.models import Item  # ← items アプリにある Item モデルを使うため追加
 
 def login_view(request):
     if request.method == 'POST':
@@ -30,5 +31,26 @@ def signup_view(request): #ユーザーがフォームを送信（submit）し�
     return render(request, 'accounts/signup.html', {'form': form}) #signup.html テンプレートにフォームを送って、表示する。
 # Create your views here.
 
+#def home_view(request):
+    #return HttpResponse("こんにちは！あなたの推し活をサポートします。")
+
 def home_view(request):
-    return HttpResponse("こんにちは！あなたの推し活をサポートします。")
+    query = request.GET.get('q')  # URLパラメータから「q=検索キーワード」を取得
+    category = request.GET.get('category')# URLパラメータからカテゴリを取得
+    items = Item.objects.all()
+    categories = Item.objects.values_list('category', flat=True).distinct()
+    
+    if query:
+        items = Item.objects.filter(title__icontains=query)  # タイトルに部分一致するものを取得
+    if category:
+        items = items.filter(category=category)
+
+   
+    message = "こんにちは！あなたの推し活をサポートします。"
+
+    return render(request, 'accounts/home.html',
+                  {'items': items, 
+                   'query': query, 
+                    'category': category,#ユーザーが現在選択しているカテゴリ
+                    'categories': categories,#全カテゴリ一覧（重複なし）
+                   'message': message}) # ← メッセージをテンプレートに送る

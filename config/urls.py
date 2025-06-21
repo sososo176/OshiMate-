@@ -18,11 +18,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect
 from accounts.views import home_view 
-
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
+    path('items/', include('items.urls')),
     path('home/', home_view, name='home'),
     path('', lambda request: redirect('accounts:login')),
 ]
+
+# ↓ urlpatterns の定義「の後」に追記すること！
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

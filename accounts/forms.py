@@ -5,7 +5,6 @@ import re
 
 
 
-
 GENDER_CHOICES = [
     ('男性', '男性'),
     ('女性', '女性'),
