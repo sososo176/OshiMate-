@@ -1,6 +1,6 @@
 # items/views.py
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .forms import ItemForm
 from .models import Item
@@ -37,3 +37,7 @@ def item_create_view(request):
         form = ItemForm()
 
     return render(request, 'items/item_form.html', {'form': form})
+
+def item_detail_view(request, pk):
+    item = get_object_or_404(Item, pk=pk)
+    return render(request, 'items/item_detail.html', {'item': item})

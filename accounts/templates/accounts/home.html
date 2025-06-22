@@ -33,22 +33,44 @@
     </form>
 
     <!-- アイテム一覧 -->
-    <div class="row">
-        {% for item in items %}
-            <div class="col-6 col-md-4 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}">
+<div class="row">
+    {% for item in items %}
+        <div class="col-6 col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
 
-                    <div class="card-body">
-                        <h5 class="card-title">{{ item.title }}</h5>
-                        <!-- 今後詳細ページのリンクに変更予定 -->
-                    </div>
+                <!-- ✅ 詳細ページへのリンクを画像全体に適用 -->
+                <a href="{% url 'items:item_detail' item.pk %}">
+                    {% if item.image1 %}
+                        <img src="{{ item.image1.url }}" class="card-img-top" alt="{{ item.title }}">
+                    {% elif item.image2 %}
+                        <img src="{{ item.image2.url }}" class="card-img-top" alt="{{ item.title }}">
+                    {% elif item.image3 %}
+                        <img src="{{ item.image3.url }}" class="card-img-top" alt="{{ item.title }}">
+                    {% elif item.image4 %}
+                        <img src="{{ item.image4.url }}" class="card-img-top" alt="{{ item.title }}">
+                    {% elif item.image5 %}
+                        <img src="{{ item.image5.url }}" class="card-img-top" alt="{{ item.title }}">
+                    {% else %}
+                        <div class="card-img-top text-center py-5 bg-secondary text-white">
+                            No Image
+                        </div>
+                    {% endif %}
+                </a>
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.title }}</h5>
                 </div>
             </div>
-        {% empty %}
-            <p>該当するアイテムが見つかりませんでした。</p>
-        {% endfor %}
-    </div>
+        </div>
+    {% empty %}
+        <p>該当するアイテムが見つかりませんでした。</p>
+    {% endfor %}
+</div>
+
+
+
+
+
 </div>
 
 <!-- フッターアイコン -->
@@ -59,6 +81,7 @@
         <a href="#" class="nav-link text-secondary">📦 持ち物リスト</a>
     </div>
 </nav>
+
 
 
 
