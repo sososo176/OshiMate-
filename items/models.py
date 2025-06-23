@@ -2,6 +2,7 @@
 
 # Create your models here.
 from django.db import models  # Djangoのモデル機能を使うためにインポート
+from django.contrib.auth.models import User
 
 class Item(models.Model):  # Itemというデータの「型（モデル）」を定義
     title = models.CharField(max_length=100)  
@@ -31,6 +32,7 @@ class Item(models.Model):  # Itemというデータの「型（モデル）」�
 
     created_at = models.DateTimeField(auto_now_add=True)
     # 作成日時（自動で記録）
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
     def __str__(self):

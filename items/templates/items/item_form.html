@@ -9,11 +9,13 @@
 </head>
 <body class="bg-light">
 
-<div class="container py-4">
+<div class="container py-4 mb-5">
+
     <!-- ロゴ -->
     <h2 class="text-center mb-4">OshiMate</h2>
 
     <h4 class="mb-3 text-center">アイテムを投稿する</h4>
+    <div class="card shadow p-4">
 
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
@@ -57,6 +59,7 @@
 
         <button type="submit" class="btn btn-primary w-100">投稿する</button>
     </form>
+    </div>
 
    
 </div>
