@@ -11,8 +11,14 @@
 
 <div class="container py-4">
     <!-- タイトル -->
-    <h2 class="text-center mb-4">OshiMate ホーム</h2>
-    <p class="text-center text-muted mb-4">こんにちは<br>あなたの推し活をサポートします。</p>
+    <h2 class="text-center mb-4">OshiMate </h2>
+    <p class="text-center text-muted mb-4">あなたの推し活をサポートします。</p>
+<!-- 新規でアイテムを投稿する -->
+<div class="text-end mb-3">
+    <a href="{% url 'items:item_create' %}" class="btn btn-primary">
+        ＋ アイテムを投稿する
+    </a>
+</div>
 
 
     <!-- 🔍 検索フォーム -->
