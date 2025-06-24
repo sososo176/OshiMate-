@@ -11,6 +11,10 @@ urlpatterns = [
     path('<int:pk>/delete/', views.item_delete_view, name='item_delete'),
     path('<int:pk>/edit/', views.item_edit_view, name='item_edit'),
     path('create/', views.item_create_view, name='item_create'),
+    path('item-lists/', views.item_list_view, name='item_list'),
+    path('<int:pk>/add-to-list/', views.add_to_list_view, name='add_to_list'),
+    path('create-item-list/', views.create_item_list_view, name='create_item_list'),
+
 
 
 ]

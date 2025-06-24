@@ -31,6 +31,17 @@
 
 </head>
 <body class="bg-light">
+  {% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="閉じる"></button>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
 
 <div class="container py-4 mb-5"><!-- mb-5でスクロール余裕を持たせる -->
     <h2 class="text-center mb-4">{{ item.title }}</h2>
@@ -81,7 +92,7 @@
 
 
 
-<!-- 削除確認モーダル -->
+    <!-- 削除確認モーダル -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -102,20 +113,78 @@
     </div>
   </div>
 </div>
+ 
 
+
+<!-- アイテムリスト追加フォーム（ログインしているユーザーのみ） -->
+{% if user.is_authenticated %}
+  <form method="post" action="{% url 'items:add_to_list' item.pk %}">
+    {% csrf_token %}
+
+    <!-- リスト選択 + 新規作成ボタン（横並び） -->
+    <div class="d-flex align-items-end mb-3">
+      <div class="flex-grow-1 me-2">
+        <label for="itemListSelect" class="form-label">リストを選択</label>
+        <select name="item_list_id" id="itemListSelect" class="form-select" required>
+          <option value="">選択してください</option>
+          {% for list in item_lists %}
+            <option value="{{ list.id }}">{{ list.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- ＋新規作成ボタン（モーダル起動） -->
+      <div>
+        <label class="form-label invisible">新規</label>
+        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#newListModal">
+          ＋新規作成
+        </button>
+      </div>
+    </div>
+
+    <!-- 追加ボタン -->
+    <button type="submit" class="btn btn-primary w-100">持ち物リストに追加</button>
+  </form>
+{% endif %}
+
+<!-- ★ここからは別のフォーム（モーダル用） -->
+<div class="modal fade" id="newListModal" tabindex="-1" aria-labelledby="newListModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="{% url 'items:create_item_list' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="newListModalLabel">新しい持ち物リストを作成</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="listName" class="form-label">リスト名</label>
+            <input type="text" name="name" id="listName" class="form-control" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">作成</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- スクロール余白 -->
+<div style="height: 80px;"></div>
 
 <!-- フッター -->
 <nav class="navbar fixed-bottom navbar-light bg-white border-top">
-    <div class="container d-flex justify-content-around">
-        <a href="{% url 'accounts:home' %}" class="nav-link text-primary">🏠 ホーム</a>
-        <a href="#" class="nav-link text-secondary">👤 マイページ</a>
-        <a href="#" class="nav-link text-secondary">📦 持ち物リスト</a>
-    </div>
+  <div class="container d-flex justify-content-around">
+    <a href="{% url 'accounts:home' %}" class="nav-link text-primary">🏠 ホーム</a>
+    <a href="#" class="nav-link text-secondary">👤 マイページ</a>
+    <a href="#" class="nav-link text-secondary">📦 持ち物リスト</a>
+  </div>
 </nav>
 
-<a href="{% url 'items:item_edit' item.pk %}" class="btn btn-sm btn-outline-primary">編集</a>
+<!-- BootstrapのJS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-
 </body>
 </html>

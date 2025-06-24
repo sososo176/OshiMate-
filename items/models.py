@@ -43,3 +43,21 @@ class Item(models.Model):  # Itemというデータの「型（モデル）」�
 class ItemImage(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='item_images/')
+
+
+class ItemList(models.Model):
+    name = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.name}（{self.user.username}）'
+
+
+class ChecklistItem(models.Model):
+    item_list = models.ForeignKey(ItemList, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.item.title} in {self.item_list.name}'

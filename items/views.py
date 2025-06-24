@@ -5,6 +5,8 @@ from django.contrib import messages
 from .forms import ItemForm
 from .models import Item
 from django.contrib.auth.decorators import login_required
+from .models import ItemList, ItemList, ChecklistItem
+from django.views.decorators.http import require_POST
 
 @login_required
 def item_edit_view(request, pk):
@@ -30,14 +32,17 @@ def item_edit_view(request, pk):
 @login_required
 def item_detail_view(request, pk):
     item = get_object_or_404(Item, pk=pk)
+    item_lists = ItemList.objects.filter(user=request.user) 
     return render(request, 'items/item_detail.html', {
         'item': item,
-        'user': request.user
+        'user': request.user,
+        'item_lists': item_lists,
     })
 
 @login_required
 def item_delete_view(request, pk):
     item = get_object_or_404(Item, pk=pk)
+    
     if request.user == item.user:
         item.delete()
         messages.success(request, "アイテムを削除しました")
@@ -82,3 +87,35 @@ def item_create_view(request):
 
     return render(request, 'items/item_form.html', {'form': form})
 
+
+
+@login_required
+def item_list_view(request):
+    item_lists = ItemList.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'items/item_list.html', {'item_lists': item_lists})
+
+
+@login_required
+def add_to_list_view(request, pk):
+    item = get_object_or_404(Item, pk=pk)
+
+    if request.method == 'POST':
+        list_id = request.POST.get('item_list_id')
+        item_list = get_object_or_404(ItemList, id=list_id, user=request.user)
+
+        # 重複登録を防ぐ
+        if not ChecklistItem.objects.filter(item_list=item_list, item=item).exists():
+            ChecklistItem.objects.create(item_list=item_list, item=item)
+            messages.success(request, '持ち物リストに追加しました！')
+        else:
+            messages.info(request, 'すでにこのリストに含まれています。')
+
+    return redirect('items:item_detail', pk=pk)
+
+@require_POST
+@login_required
+def create_item_list_view(request):
+    name = request.POST.get('name')
+    if name:
+        ItemList.objects.create(user=request.user, name=name)
+    return redirect(request.META.get('HTTP_REFERER', 'accounts:home'))
