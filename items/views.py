@@ -7,6 +7,7 @@ from .models import Item
 from django.contrib.auth.decorators import login_required
 from .models import ItemList, ItemList, ChecklistItem
 from django.views.decorators.http import require_POST
+#from django.http import HttpResponseRedirect
 
 @login_required
 def item_edit_view(request, pk):
@@ -89,10 +90,19 @@ def item_create_view(request):
 
 
 
-@login_required
+#@login_required
+#def item_list_view(request):
+ #   item_lists = ItemList.objects.filter(user=request.user).order_by('-created_at')
+ #  return render(request, 'items/item_list.html', {'item_lists': item_lists})
+
+# items/views.py
 def item_list_view(request):
-    item_lists = ItemList.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'items/item_list.html', {'item_lists': item_lists})
+    tutorial_lists = ItemList.objects.filter(is_tutorial=True)  # 初心者用
+    user_lists = ItemList.objects.filter(user=request.user, is_tutorial=False)  # 通常用
+    return render(request, 'items/item_list.html', {
+        'tutorial_lists': tutorial_lists,
+        'user_lists': user_lists,
+    })
 
 
 @login_required
@@ -119,3 +129,81 @@ def create_item_list_view(request):
     if name:
         ItemList.objects.create(user=request.user, name=name)
     return redirect(request.META.get('HTTP_REFERER', 'accounts:home'))
+
+
+
+@login_required
+def item_list_detail_view(request, list_id):
+    item_list = get_object_or_404(ItemList, id=list_id)
+    checklist_items = ChecklistItem.objects.filter(item_list=item_list)
+    is_tutorial = item_list.is_tutorial
+    return render(request, 'items/item_list_detail.html', {
+        'item_list': item_list,
+        'checklist_items': checklist_items,
+        'is_tutorial': is_tutorial,
+    })
+
+@login_required
+def update_checklist_view(request, list_id):
+    item_list = get_object_or_404(ItemList, id=list_id, user=request.user)
+    checklist_items = ChecklistItem.objects.filter(item_list=item_list)
+
+    # すべて一旦未チェックに
+    checklist_items.update(is_checked=False)
+
+    # チェックされたIDを反映
+    checked_ids = request.POST.getlist('checked_items')
+    ChecklistItem.objects.filter(id__in=checked_ids).update(is_checked=True)
+
+    return redirect('items:item_list_detail', list_id=list_id)
+
+
+
+@require_POST
+@login_required
+def update_check_status_view(request, list_id):
+    checklist_items = ChecklistItem.objects.filter(item_list__id=list_id, item_list__user=request.user)
+
+    for item in checklist_items:
+        checkbox_value = request.POST.get(f'check_{item.id}')
+        item.is_checked = bool(checkbox_value)
+        item.save()
+
+    messages.success(request, "チェック状態を保存しました。")
+    return redirect('items:item_list_detail', list_id=list_id)
+
+
+
+@require_POST
+@login_required
+def remove_checklist_item(request, item_id):
+    checklist_item = get_object_or_404(ChecklistItem, id=item_id, item_list__user=request.user)
+
+    item_list_id = checklist_item.item_list.id
+    checklist_item.delete()
+    messages.success(request, "アイテムを削除しました。")
+
+    return redirect('items:item_list_detail', list_id=item_list_id)
+
+def copy_list_view(request, list_id):
+    original_list = get_object_or_404(ItemList, id=list_id, is_tutorial=True)
+    if request.method == 'POST':
+        copied_list = ItemList.objects.create(
+            name=f"{original_list.name}（コピー）",
+            user=request.user,
+            is_tutorial=False
+        )
+        # 元のリストのアイテムを複製
+        for checklist_item in ChecklistItem.objects.filter(item_list=original_list):
+            ChecklistItem.objects.create(
+                item_list=copied_list,
+                item=checklist_item.item,
+                is_checked=False  # コピー時は未チェックにする
+            )
+        return redirect('items:item_list_list')
+    
+@login_required
+def delete_item_list(request, list_id):
+    item_list = get_object_or_404(ItemList, id=list_id, user=request.user)
+    item_list.delete()
+    return redirect('items:item_list_view')

@@ -1,161 +1,116 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
+{% load custom_tags %}
 
+{% block content %}
+<!-- ✅ ロゴ -->
+<h2 class="text-center mb-3">OshiMate</h2>
 
+<!-- ✅ パンくずリスト -->
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'accounts:home' %}">ホーム</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'items:item_list' %}">アイテム一覧</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ item.title }}</li>
+  </ol>
+</nav>
 
-    <meta charset="UTF-8">
-    <title>{{ item.title }} | OshiMate</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .item-image-wrapper {
-            width: 100%;
-            height: 250px; /* ここで高さを統一 */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-        }
+{% if messages %}
+<div class="container mt-3">
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="閉じる"></button>
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
 
-        .item-image {
-            max-width: 100%;
-            max-height: 100%;
-        }
-    </style>
+<div class="container py-4 pb-5">
+  <h2 class="text-center mb-4">{{ item.title }}</h2>
+  
 
-        
+  {% if item.user and request.user == item.user %}
+  <div class="text-end mb-3">
+    <a href="{% url 'items:item_edit' item.pk %}" class="btn btn-sm btn-outline-primary">編集</a>
 
-</head>
-<body class="bg-light">
-  {% if messages %}
-  <div class="container mt-3">
-    {% for message in messages %}
-      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="閉じる"></button>
-      </div>
-    {% endfor %}
+    <!-- 削除モーダルボタン -->
+    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+      削除
+    </button>
   </div>
   {% endif %}
 
-
-<div class="container py-4 mb-5"><!-- mb-5でスクロール余裕を持たせる -->
-    <h2 class="text-center mb-4">{{ item.title }}</h2>
-
-     {% if item.user and request.user == item.user %}
-    <div class="text-end mb-3">
-        <a href="{% url 'items:item_edit' item.pk %}" class="btn btn-sm btn-outline-primary">編集</a>
-
-        <!-- 削除ボタン（モーダル起動） -->
-        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
-            削除
-        </button>
-    </div>
-    {% endif %}
-
-    <!-- 画像（最大5枚） -->
-    {% if item.image1 %}
-        <div class="item-image-wrapper mb-2">
-            <img src="{{ item.image1.url }}" class="item-image" alt="画像1">
+  <!-- 画像表示 -->
+  {% for i in "12345" %}
+    {% with image=item|get_dynamic_image:i %}
+      {% if image %}
+        <div class="item-image-wrapper mb-3 text-center">
+          <img src="{{ image.url }}" class="img-fluid rounded shadow" style="max-width: 100%; height: auto; max-height: 300px;" alt="画像{{ i }}">
         </div>
-    {% endif %}
-    {% if item.image2 %}
-        <div class="item-image-wrapper mb-2">
-            <img src="{{ item.image2.url }}" class="item-image" alt="画像2">
-        </div>
-    {% endif %}
-    {% if item.image3 %}
-        <div class="item-image-wrapper mb-2">
-            <img src="{{ item.image3.url }}" class="item-image" alt="画像3">
-        </div>
-    {% endif %}
-    {% if item.image4 %}
-        <div class="item-image-wrapper mb-2">
-            <img src="{{ item.image4.url }}" class="item-image" alt="画像4">
-        </div>
-    {% endif %}
-    {% if item.image5 %}
-        <div class="item-image-wrapper mb-2">
-            <img src="{{ item.image5.url }}" class="item-image" alt="画像5">
-        </div>
-    {% endif %}
+      {% endif %}
+    {% endwith %}
+  {% endfor %}
 
-
-    <p><strong>カテゴリ：</strong>{{ item.category }}</p>
-    <p><strong>オススメポイント：</strong>{{ item.description }}</p>
-    
+  <p><strong>カテゴリ：</strong>{{ item.category }}</p>
+  <p><strong>オススメポイント：</strong>{{ item.description }}</p>
 </div>
 
-
-
-    <!-- 削除確認モーダル -->
+<!-- アイテム削除用モーダル -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="deleteModalLabel">削除の確認</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
-      </div>
-      <div class="modal-body">
-        本当にこのアイテムを削除しますか？
-      </div>
-      <div class="modal-footer">
-        <form method="post" action="{% url 'items:item_delete' item.pk %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">削除する</button>
-        </form>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
-      </div>
+      <form method="post" action="{% url 'items:item_delete' item.pk %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title">削除の確認</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">本当にこのアイテムを削除しますか？</div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger">削除する</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
- 
 
-
-<!-- アイテムリスト追加フォーム（ログインしているユーザーのみ） -->
+<!-- 持ち物リストに追加 -->
 {% if user.is_authenticated %}
-  <form method="post" action="{% url 'items:add_to_list' item.pk %}">
-    {% csrf_token %}
+<form method="post" action="{% url 'items:add_to_list' item.pk %}">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label for="itemListSelect" class="form-label">リストを選択</label>
+    <select name="item_list_id" id="itemListSelect" class="form-select" required>
+      <option value="">選択してください</option>
+      {% for list in item_lists %}
+        <option value="{{ list.id }}">{{ list.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
 
-    <!-- リスト選択 + 新規作成ボタン（横並び） -->
-    <div class="d-flex align-items-end mb-3">
-      <div class="flex-grow-1 me-2">
-        <label for="itemListSelect" class="form-label">リストを選択</label>
-        <select name="item_list_id" id="itemListSelect" class="form-select" required>
-          <option value="">選択してください</option>
-          {% for list in item_lists %}
-            <option value="{{ list.id }}">{{ list.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
+  <div class="mb-3 text-end">
+    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#newListModal">
+      ＋新規作成
+    </button>
+  </div>
 
-      <!-- ＋新規作成ボタン（モーダル起動） -->
-      <div>
-        <label class="form-label invisible">新規</label>
-        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#newListModal">
-          ＋新規作成
-        </button>
-      </div>
-    </div>
+  
+  <button type="submit" class="btn btn-primary w-100 mb-5">持ち物リストに追加</button>
 
-    <!-- 追加ボタン -->
-    <button type="submit" class="btn btn-primary w-100">持ち物リストに追加</button>
-  </form>
+</form>
 {% endif %}
 
-<!-- ★ここからは別のフォーム（モーダル用） -->
+<!-- 新規作成モーダル -->
 <div class="modal fade" id="newListModal" tabindex="-1" aria-labelledby="newListModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <form method="post" action="{% url 'items:create_item_list' %}">
         {% csrf_token %}
         <div class="modal-header">
-          <h5 class="modal-title" id="newListModalLabel">新しい持ち物リストを作成</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+          <h5 class="modal-title">新しい持ち物リストを作成</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <div class="mb-3">
@@ -172,19 +127,4 @@
   </div>
 </div>
 
-<!-- スクロール余白 -->
-<div style="height: 80px;"></div>
-
-<!-- フッター -->
-<nav class="navbar fixed-bottom navbar-light bg-white border-top">
-  <div class="container d-flex justify-content-around">
-    <a href="{% url 'accounts:home' %}" class="nav-link text-primary">🏠 ホーム</a>
-    <a href="#" class="nav-link text-secondary">👤 マイページ</a>
-    <a href="#" class="nav-link text-secondary">📦 持ち物リスト</a>
-  </div>
-</nav>
-
-<!-- BootstrapのJS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+{% endblock %}

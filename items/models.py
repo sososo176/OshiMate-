@@ -49,6 +49,8 @@ class ItemList(models.Model):
     name = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_tutorial = models.BooleanField(default=False)
+
 
     def __str__(self):
         return f'{self.name}（{self.user.username}）'
@@ -57,6 +59,7 @@ class ItemList(models.Model):
 class ChecklistItem(models.Model):
     item_list = models.ForeignKey(ItemList, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    is_checked = models.BooleanField(default=False)  
     added_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
