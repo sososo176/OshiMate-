@@ -3,8 +3,6 @@
 {% block content %}
 
 
-
-
 <div class="container py-4 mb-5">
     <h2 class="text-center mb-4">{{ item_list.name }}</h2>
     <!-- パンくずリスト -->
@@ -16,6 +14,17 @@
   </ol>
 </nav>
 
+
+<!--  チェックを一括解除ボタン -->
+{% if not is_tutorial %}
+  <form method="post" action="{% url 'items:uncheck_all' item_list.id %}" class="mb-3">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-outline-warning w-100">すべてのチェックを解除</button>
+  </form>
+{% endif %}
+
+
+
    {% if messages %}
   {% for message in messages %}
     <div class="alert alert-success mt-3">{{ message }}</div>
@@ -23,43 +32,43 @@
 {% endif %}
 
 <!--  is_tutorial で保存フォームを分岐 -->
-{% if not is_tutorial %}
+{% if not item_list.is_tutorial %}
   <form method="post" action="{% url 'items:update_check_status' item_list.id %}">
       {% csrf_token %}
       <ul class="list-group">
-          {% for checklist_item in checklist_items %}
+        {% for checklist_item in checklist_items %}
           <li class="list-group-item d-flex justify-content-between align-items-center">
-              <div>
-                  <input type="checkbox" name="check_{{ checklist_item.id }}" {% if checklist_item.is_checked %}checked{% endif %}>
-                  {{ checklist_item.item.title }}
-              </div>
-              <!-- 削除ボタン（自分のリストだけ） -->
-              <form method="post" action="{% url 'items:remove_checklist_item' checklist_item.id %}">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('このアイテムを削除しますか？');">削除</button>
-              </form>
-          </li>
-          {% endfor %}
-      </ul>
+            <div>
+              <input type="checkbox" name="check_{{ checklist_item.id }}" value="on" {% if checklist_item.is_checked %}checked{% endif %}>
+              {{ checklist_item.item.title }}
+            </div>
+            <!-- 削除ボタン：formをネストせず、別フォームとして記述 -->
+            <form method="post" action="{% url 'items:remove_checklist_item' checklist_item.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('このアイテムを削除しますか？');">削除</button>
+            </form>
+           </li>
+    {% endfor %}
+  </ul>
 
-      <div class="mt-3">
-          <button type="submit" class="btn btn-primary w-100">チェック状態を保存</button>
-      </div>
-  </form>
+  <div class="mt-3">
+    <button type="submit" class="btn btn-primary w-100">チェック状態を保存</button>
+  </div>
+</form>
+
 {% else %}
   <!--  チュートリアル表示（チェックは表示だけ） -->
   <ul class="list-group">
-      {% for checklist_item in checklist_items %}
-      <li class="list-group-item d-flex justify-content-between align-items-center">
-          <div>
-              <input type="checkbox" disabled {% if checklist_item.is_checked %}checked{% endif %}>
-              {{ checklist_item.item.title }}
-          </div>
-      </li>
-      {% endfor %}
+    {% for checklist_item in checklist_items %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <div>
+        <input type="checkbox" disabled {% if checklist_item.is_checked %}checked{% endif %}>
+        {{ checklist_item.item.title }}
+      </div>
+    </li>
+    {% endfor %}
   </ul>
 {% endif %}
-
-
 {% endblock %}
+
 

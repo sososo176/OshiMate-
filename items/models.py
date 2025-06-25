@@ -13,6 +13,7 @@ class Item(models.Model):  # Itemというデータの「型（モデル）」�
 
     created_at = models.DateTimeField(auto_now_add=True)
     # 登録された日時を自動で記録（作成時のみ）
+    checked = models.BooleanField(default=False)
  # ↓カテゴリを追加
     category = models.CharField(max_length=50, choices=[
     ('現場グッズ', '現場グッズ'),

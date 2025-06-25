@@ -157,21 +157,27 @@ def update_checklist_view(request, list_id):
 
     return redirect('items:item_list_detail', list_id=list_id)
 
-
-
 @require_POST
 @login_required
 def update_check_status_view(request, list_id):
-    checklist_items = ChecklistItem.objects.filter(item_list__id=list_id, item_list__user=request.user)
+    item_list = get_object_or_404(ItemList, id=list_id, user=request.user)
+    checklist_items = ChecklistItem.objects.filter(item_list=item_list)
 
+    # POSTデータを確認
+    print("POST data:", request.POST)  # 送信されたデータを確認
+
+    # チェックボックスの状態を更新
     for item in checklist_items:
         checkbox_value = request.POST.get(f'check_{item.id}')
-        item.is_checked = bool(checkbox_value)
-        item.save()
+        if checkbox_value:
+            item.is_checked = True  # チェックされていればTrueに設定
+        else:
+            item.is_checked = False  # チェックされていなければFalseに設定
+        item.save()  # 更新された状態を保存
 
+    # 成功メッセージと共にリダイレクト
     messages.success(request, "チェック状態を保存しました。")
     return redirect('items:item_list_detail', list_id=list_id)
-
 
 
 @require_POST
@@ -207,3 +213,15 @@ def delete_item_list(request, list_id):
     item_list = get_object_or_404(ItemList, id=list_id, user=request.user)
     item_list.delete()
     return redirect('items:item_list_view')
+
+
+@require_POST
+@login_required
+def uncheck_all_view(request, list_id):
+    item_list = get_object_or_404(ItemList, id=list_id, user=request.user)
+
+    # 全てのチェックをFalseにする
+    ChecklistItem.objects.filter(item_list=item_list).update(is_checked=False)
+
+    messages.success(request, "すべてのチェックを解除しました。")
+    return redirect('items:item_list_detail', list_id=list_id)
