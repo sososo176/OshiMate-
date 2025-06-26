@@ -18,5 +18,9 @@ urlpatterns = [
     path('item-list/<int:list_id>/copy/', views.copy_list_view, name='copy_list'),  
     path('item-list/<int:list_id>/delete/', views.delete_item_list, name='delete_item_list'),
     path('item-list/<int:list_id>/uncheck_all/', views.uncheck_all_view, name='uncheck_all'),
+    path('mypage/', views.mypage_view, name='mypage'),
+    path('profile/edit/', views.profile_edit_view, name='profile_edit'),
+    path('user-posts/', views.user_posts_view, name='user_posts'),
+
 
 ]

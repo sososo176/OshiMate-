@@ -65,3 +65,5 @@ class ChecklistItem(models.Model):
 
     def __str__(self):
         return f'{self.item.title} in {self.item_list.name}'
+
+

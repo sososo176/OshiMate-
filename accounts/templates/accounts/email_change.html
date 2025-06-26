@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!--  ロゴ -->
+<h2 class="text-center mb-3">OshiMate</h2>
+
+<!-- パンくずリスト -->
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'accounts:home' %}">ホーム</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'accounts:mypage' %}">マイページ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">メールアドレス変更</li>
+  </ol>
+</nav>
+
+<div class="container mt-4">
+  <h2>メールアドレス変更</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary mt-3">変更する</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+

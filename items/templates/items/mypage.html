@@ -1,0 +1,55 @@
+<!-- ロゴ -->
+<img src="{% static 'images/logo.png' %}" alt="OshiMate" class="logo">
+
+<!-- パンくずリスト -->
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'accounts:home' %}">ホーム</a></li>
+    <li class="breadcrumb-item active" aria-current="page">マイページ</li>
+  </ol>
+</nav>
+
+<!-- プロフィール -->
+<div class="profile">
+  <img src="{{ user.profile.profile_image.url }}" alt="プロフィール画像" class="profile-img">
+
+  
+  <div class="profile-details">
+    <h3>{{ user.username }}</h3>
+    <p>{{ user.get_full_name }}</p>
+  </div>
+</div>
+
+<div class="actions">
+  <a href="{% url 'accounts:profile_edit' %}" class="btn btn-primary">プロフィール編集へ</a>
+  <a href="{% url 'accounts:email_change' %}" class="btn btn-secondary">メールアドレス変更へ</a>
+  <a href="{% url 'accounts:password_change' %}" class="btn btn-warning">パスワード変更へ</a>
+  <a href="{% url 'items:user_posts' %}" class="btn btn-info">自分の投稿一覧へ</a>
+</div>
+
+
+<!-- ログアウトモーダル -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="logoutModalLabel">ログアウト確認</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        本当にログアウトしますか？
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">いいえ</button>
+        <a href="{% url 'accounts:logout' %}" class="btn btn-primary">はい</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<footer>
+  <div class="container">
+    <p>&copy; 2025 OshiMate. All rights reserved.</p>
+  </div>
+</footer>

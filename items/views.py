@@ -2,7 +2,7 @@
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .forms import ItemForm
+from .forms import ItemForm, ProfileForm
 from .models import Item
 from django.contrib.auth.decorators import login_required
 from .models import ItemList, ItemList, ChecklistItem
@@ -225,3 +225,34 @@ def uncheck_all_view(request, list_id):
 
     messages.success(request, "すべてのチェックを解除しました。")
     return redirect('items:item_list_detail', list_id=list_id)
+
+
+
+@login_required
+def mypage_view(request):
+    return render(request, 'items/mypage.html')
+
+
+
+@login_required
+def profile_edit_view(request):
+    # ユーザーのプロフィールを取得
+    profile = request.user.profile
+
+    if request.method == 'POST':
+        # フォームが送信された場合
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()  # フォームのデータを保存
+            return redirect('mypage')  # マイページにリダイレクト
+    else:
+        # フォームを表示
+        form = ProfileForm(instance=profile)
+
+    return render(request, 'items/profile_edit.html', {'form': form})
+
+
+@login_required
+def user_posts_view(request):
+    items = Item.objects.filter(user=request.user)
+    return render(request, 'items/user_posts.html', {'items': items})

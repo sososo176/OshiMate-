@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>自分の投稿一覧</h2>
+  {% for item in items %}
+    <div>{{ item.title }}</div>
+  {% empty %}
+    <p>投稿がありません。</p>
+  {% endfor %}
+</div>
+{% endblock %}

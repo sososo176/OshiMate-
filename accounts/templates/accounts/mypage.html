@@ -1,0 +1,67 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+
+  <!--  ロゴ -->
+<h2 class="text-center mb-3">OshiMate</h2>
+
+
+  <!-- パンくずリスト -->
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'accounts:home' %}">ホーム</a></li>
+      <li class="breadcrumb-item active" aria-current="page">マイページ</li>
+    </ol>
+  </nav>
+
+<!-- プロフィール -->
+<div class="d-flex align-items-center mb-4">
+  {% if user.profile.image %}
+    <img src="{{ user.profile.image.url }}" alt="プロフィール画像" class="rounded-circle me-3" width="100" height="100">
+  {% else %}
+    <img src="{% static 'images/user_icon.jpeg' %}" alt="デフォルト画像" class="rounded-circle me-3" width="100" height="100">
+  {% endif %}
+
+  <div>
+    <h3>{{ user.username }}</h3>
+    <p>{{ user.email }}</p>
+  </div>
+</div>
+
+  
+
+  <!-- アクションリンク -->
+  <div class="mb-4">
+    <a href="{% url 'accounts:profile_edit' %}" class="btn btn-outline-primary w-100 mb-2">プロフィール編集へ</a>
+    <a href="{% url 'accounts:email_change' %}" class="btn btn-outline-secondary w-100 mb-2">メールアドレス変更へ</a>
+    <a href="{% url 'accounts:password_change' %}" class="btn btn-outline-warning w-100 mb-2">パスワード変更へ</a>
+    <a href="{% url 'items:user_posts' %}" class="btn btn-outline-info w-100 mb-2">自分の投稿一覧へ</a>
+    <button type="button" class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#logoutModal">
+      ログアウト
+    </button>
+  </div>
+
+</div>
+
+<!-- ログアウトモーダル -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="logoutModalLabel">ログアウト確認</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+      </div>
+      <div class="modal-body">
+        本当にログアウトしますか？
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">いいえ</button>
+        <a href="{% url 'accounts:logout' %}" class="btn btn-primary">はい</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

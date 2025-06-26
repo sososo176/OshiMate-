@@ -1,6 +1,13 @@
 # items/forms.py
 from django import forms
-from .models import Item 
+from .models import Item
+from accounts.models import Profile  # ← Profileはaccountsからインポート
+
+
+#from .models import Item, Profile 
+
+
+
 
 class ItemForm(forms.ModelForm):
     class Meta:
@@ -22,4 +29,8 @@ class ItemForm(forms.ModelForm):
         }
 
 
-    
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['name', 'bio']

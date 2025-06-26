@@ -2,6 +2,9 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm #Djangoが用意したユーザー登録フォーム（UserCreationForm）を元に自分用フォームを作るための準備。
 from django.contrib.auth.models import User #Userは、Djangoの**「ユーザー情報を保存するモデル（テーブル）」
 import re
+from .models import Profile
+from django.contrib.auth import authenticate
+
 
 
 
@@ -51,3 +54,41 @@ class SignUpForm(UserCreationForm):
         password2 = cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
             self.add_error('password2', "パスワードが一致しません。")
+
+from django import forms
+from django.contrib.auth.models import User
+from .models import Profile
+
+class ProfileForm(forms.ModelForm):
+    username = forms.CharField(label='ユーザー名', max_length=150)
+    image = forms.ImageField(label='プロフィール画像', required=False)
+
+    class Meta:
+        model = Profile
+        fields = ['image']
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if self.user:
+            self.fields['username'].initial = self.user.username
+
+    def save(self, commit=True):
+        # Save profile image
+        profile = super().save(commit=False)
+        if commit:
+            profile.save()
+
+        # Save username
+        if self.user:
+            self.user.username = self.cleaned_data['username']
+            if commit:
+                self.user.save()
+
+        return profile
+
+class EmailChangeForm(forms.Form):
+    new_email = forms.EmailField(label='新しいメールアドレス', required=True)
+    
+    
+   

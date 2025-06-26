@@ -8,17 +8,26 @@
 </head>
 <body class="bg-light">
 
-    <!-- ヘッダーなどあればここ -->
+  
+{% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-success" role="alert">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
 
     {% block content %}
-    <!-- 各ページの内容がここに入ります -->
+    
     {% endblock %}
 
     <!-- フッター（共通） -->
     <nav class="navbar fixed-bottom navbar-light bg-white border-top">
         <div class="container d-flex justify-content-around">
             <a href="{% url 'accounts:home' %}" class="nav-link text-secondary">🏠 ホーム</a>
-            <a href="#" class="nav-link text-secondary">👤 マイページ</a>
+            <a href="{% url 'accounts:mypage' %}" class="nav-link text-secondary">👤 マイページ</a>
             <a href="{% url 'items:item_list' %}" class="nav-link text-secondary">📦 持ち物リスト</a>
         </div>
     </nav>
