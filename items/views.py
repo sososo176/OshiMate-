@@ -34,6 +34,7 @@ def item_edit_view(request, pk):
 def item_detail_view(request, pk):
     item = get_object_or_404(Item, pk=pk)
     item_lists = ItemList.objects.filter(user=request.user) 
+    
     return render(request, 'items/item_detail.html', {
         'item': item,
         'user': request.user,
@@ -79,7 +80,7 @@ def item_create_view(request):
             item.image3 = uploaded_images[2]
             item.image4 = uploaded_images[3]
             item.image5 = uploaded_images[4]
-            item.user = request.user
+            
             item.save()
             messages.success(request, '投稿が完了しました！')
             return redirect('accounts:home')
@@ -254,5 +255,5 @@ def profile_edit_view(request):
 
 @login_required
 def user_posts_view(request):
-    items = Item.objects.filter(user=request.user)
-    return render(request, 'items/user_posts.html', {'items': items})
+    user_posts = Item.objects.filter(user=request.user)  # ユーザーの投稿を取得
+    return render(request, 'items/user_posts.html', {'user_posts': user_posts})

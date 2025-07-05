@@ -20,13 +20,20 @@ from django.shortcuts import redirect
 from accounts.views import home_view 
 from django.conf import settings
 from django.conf.urls.static import static
+from portfolio import views as portfolio_views 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', portfolio_views.portfolio_top, name='portfolio_top'),  # ←ポートフォリオ用トップページ
     path('accounts/', include('accounts.urls')),
     path('items/', include('items.urls')),
     path('home/', home_view, name='home'),
-    path('', lambda request: redirect('accounts:login')),
+    
+    path('oshimate/', include('items.urls')),
+    #path('', lambda request: redirect('accounts:login')),
+
+    
+   
 ]
 
 # ↓ urlpatterns の定義「の後」に追記すること！

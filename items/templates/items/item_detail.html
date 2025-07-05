@@ -10,7 +10,7 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'accounts:home' %}">ホーム</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'items:item_list' %}">アイテム一覧</a></li>
+    <li class="breadcrumb-item active" aria-current="page">アイテム詳細</li>
     <li class="breadcrumb-item active" aria-current="page">{{ item.title }}</li>
   </ol>
 </nav>
@@ -27,7 +27,6 @@
 {% endif %}
 
 <div class="container py-4 pb-5">
-  <h2 class="text-center mb-4">{{ item.title }}</h2>
   
 
   {% if item.user and request.user == item.user %}
@@ -41,6 +40,21 @@
   </div>
   {% endif %}
 
+<!-- アイテムが存在しない場合 -->
+{% if not item %}
+  <div class="container py-4 pb-5">
+    <h2 class="text-center mb-4">アイテムが見つかりません</h2>
+    <p>指定されたアイテムは存在しないか、削除された可能性があります。</p>
+  </div>
+{% else %}
+  <div class="container py-4 pb-5">
+    <h2 class="text-center mb-4">{{ item.title }}</h2>
+    <!-- アイテムの内容 -->
+    <p><strong>カテゴリ：</strong>{{ item.category }}</p>
+    <p><strong>オススメポイント：</strong>{{ item.description }}</p>
+  </div>
+{% endif %}
+
   <!-- 画像表示 -->
   {% for i in "12345" %}
     {% with image=item|get_dynamic_image:i %}
@@ -52,9 +66,6 @@
     {% endwith %}
   {% endfor %}
 
-  <p><strong>カテゴリ：</strong>{{ item.category }}</p>
-  <p><strong>オススメポイント：</strong>{{ item.description }}</p>
-</div>
 
 <!-- アイテム削除用モーダル -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">

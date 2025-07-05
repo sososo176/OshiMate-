@@ -20,12 +20,32 @@
   </div>
 </div>
 
-<div class="actions">
-  <a href="{% url 'accounts:profile_edit' %}" class="btn btn-primary">プロフィール編集へ</a>
-  <a href="{% url 'accounts:email_change' %}" class="btn btn-secondary">メールアドレス変更へ</a>
-  <a href="{% url 'accounts:password_change' %}" class="btn btn-warning">パスワード変更へ</a>
-  <a href="{% url 'items:user_posts' %}" class="btn btn-info">自分の投稿一覧へ</a>
+
+<div class="d-grid gap-2 my-3">
+ <!-- すべての「青系」ボタンを統一 -->
+<a href="{% url 'accounts:profile_edit' %}" class="btn btn-primary"
+     style="background-color: #0d6efd; color: #fff; border-color: #0d6efd;">
+     プロフィール編集へ
+  </a>
+  <a href="{% url 'accounts:email_change' %}" class="btn btn-primary"
+     style="background-color: #0d6efd; color: #fff; border-color: #0d6efd;">
+     メールアドレス変更へ
+  </a>
+  <a href="{% url 'accounts:password_change' %}" class="btn btn-primary"
+     style="background-color: #0d6efd; color: #fff; border-color: #0d6efd;">
+     パスワード変更へ
+  </a>
+  <a href="{% url 'items:user_posts' %}" class="btn btn-primary"
+     style="background-color: #0d6efd; color: #fff; border-color: #0d6efd;">
+     自分の投稿一覧へ
+  </a>
+<!-- ログアウトだけ赤のまま -->
+<button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#logoutModal">
+  ログアウト
+</button>
+
 </div>
+
 
 
 <!-- ログアウトモーダル -->

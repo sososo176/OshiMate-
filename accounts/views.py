@@ -2,13 +2,15 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
 from items.models import Item  # ← items アプリにある Item モデルを使うため追加
-from .forms import SignUpForm, ProfileForm  # ← ProfileForm を忘れずに追加
-from .models import Profile  # ← プロフィールモデルも必要
+from .forms import SignUpForm, ProfileForm  
+from .models import Profile  
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from .forms import ProfileForm
 from .forms import EmailChangeForm
 from django.contrib import messages
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 
 
 
@@ -102,7 +104,16 @@ def email_change_view(request):
 
 @login_required
 def password_change_view(request):
-    return render(request, 'accounts/password_change.html')
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'パスワードを変更しました。')
+            return redirect('accounts:password_change_done')# 完了ページへ
+    else:
+        form = PasswordChangeForm(request.user)# 初回アクセス時：空のフォームを表示
+    return render(request, 'accounts/password_change.html', {'form': form})
 
 
 

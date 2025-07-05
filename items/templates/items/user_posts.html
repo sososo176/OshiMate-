@@ -1,12 +1,41 @@
-{% extends 'base.html' %}
 
+{% extends "base.html" %}
 {% block content %}
-<div class="container mt-5">
+<!--  ロゴ -->
+<h2 class="text-center mb-3">OshiMate</h2>
+
+ <!-- パンくずリスト -->
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'accounts:home' %}">ホーム</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'accounts:mypage' %}">マイページ</a></li>
+      <li class="breadcrumb-item active" aria-current="page">自分の投稿一覧</li>
+    </ol>
+  </nav>
+
+
   <h2>自分の投稿一覧</h2>
-  {% for item in items %}
-    <div>{{ item.title }}</div>
-  {% empty %}
+
+  {% if user_posts %}
+    <ul>
+      {% for post in user_posts %}
+        <li>
+          <a href="{% url 'items:item_detail' post.id %}">
+            <div class="item-wrapper">
+              <!-- アイテム画像（最初の画像のみ） -->
+              {% if post.image1 %}
+                <img src="{{ post.image1.url }}" alt="{{ post.name }}" class="img-fluid rounded" style="max-width: 200px; height: auto;">
+              {% endif %}
+              <!-- アイテム名 -->
+              <p><strong>{{ post.title }}</strong></p> <!-- アイテム名を画像の下に追加 -->
+              <!-- アイテムカテゴリ -->
+              <p><strong>カテゴリ：</strong>{{ post.category }}</p>
+            </div>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
     <p>投稿がありません。</p>
-  {% endfor %}
-</div>
+  {% endif %}
 {% endblock %}
