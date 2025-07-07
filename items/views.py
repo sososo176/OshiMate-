@@ -207,7 +207,7 @@ def copy_list_view(request, list_id):
                 item=checklist_item.item,
                 is_checked=False  # コピー時は未チェックにする
             )
-        return redirect('items:item_list_list')
+        return redirect('items:item_list')
     
 @login_required
 def delete_item_list(request, list_id):
