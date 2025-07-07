@@ -213,7 +213,7 @@ def copy_list_view(request, list_id):
 def delete_item_list(request, list_id):
     item_list = get_object_or_404(ItemList, id=list_id, user=request.user)
     item_list.delete()
-    return redirect('items:item_list_view')
+    return redirect('items:item_list')
 
 
 @require_POST
