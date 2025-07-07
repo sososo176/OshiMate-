@@ -34,15 +34,17 @@
   
 
   <!-- アクションリンク -->
-  <div class="mb-4">
-    <a href="{% url 'accounts:profile_edit' %}" class="btn btn-outline-primary w-100 mb-2">プロフィール編集へ</a>
-    <a href="{% url 'accounts:email_change' %}" class="btn btn-outline-secondary w-100 mb-2">メールアドレス変更へ</a>
-    <a href="{% url 'accounts:password_change' %}" class="btn btn-outline-warning w-100 mb-2">パスワード変更へ</a>
-    <a href="{% url 'items:user_posts' %}" class="btn btn-outline-info w-100 mb-2">自分の投稿一覧へ</a>
-    <button type="button" class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#logoutModal">
-      ログアウト
-    </button>
-  </div>
+ <div class="d-grid gap-2 my-3">
+  <a href="{% url 'accounts:profile_edit' %}" class="btn btn-primary w-100">プロフィール編集へ</a>
+  <a href="{% url 'accounts:email_change' %}" class="btn btn-primary w-100">メールアドレス変更へ</a>
+  <a href="{% url 'accounts:password_change' %}" class="btn btn-primary w-100">パスワード変更へ</a>
+  <a href="{% url 'items:user_posts' %}" class="btn btn-primary w-100">自分の投稿一覧へ</a>
+
+  <!-- ログアウトだけ赤に -->
+  <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#logoutModal">
+    ログアウト
+  </button>
+ </div>
 
 </div>
 

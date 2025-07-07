@@ -231,7 +231,7 @@ def uncheck_all_view(request, list_id):
 
 @login_required
 def mypage_view(request):
-    return render(request, 'items/mypage.html')
+    return render(request, 'items/mypage.html')#'accounts/mypage.html','items/mypage.html'
 
 
 
