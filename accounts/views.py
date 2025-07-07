@@ -20,7 +20,12 @@ def signup_view(request): #ユーザーがフォームを送信（submit）し�
     if request.method == 'POST':
         form = SignUpForm(request.POST) #入力された内容を SignUpForm に渡す。
         if form.is_valid():
-            form.save()
+            
+            user = form.save()
+            
+            # 既に Profile が存在しない場合のみ作成
+            if not Profile.objects.filter(user=user).exists():
+                Profile.objects.create(user=user)
             return redirect('accounts:login')  #登録完了後、ログイン画面（accounts:login）に移動。
     else:
         form = SignUpForm() #最初に画面を開いたとき（GET）は、空のフォームを表示するためにこの処理。
