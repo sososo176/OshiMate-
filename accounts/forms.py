@@ -38,9 +38,9 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'gender', 'birthdate', 'password1', 'password2')
-        labels = {
-            'username': 'ユーザー名',
-        }
+        # labels = {
+        #     'username': 'ユーザー名',
+        # }
 
     def clean_password1(self):
         password = self.cleaned_data.get('password1')
@@ -54,10 +54,19 @@ class SignUpForm(UserCreationForm):
         password2 = cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
             self.add_error('password2', "パスワードが一致しません。")
+            
+    def save(self, commit=True):
+        user = super().save(commit=commit)
+        if commit:
+            # Profile を作成して保存
+            Profile.objects.create(
+                user=user,
+                gender=self.cleaned_data['gender'],
+                birthdate=self.cleaned_data['birthdate'],
+                name=self.cleaned_data['username'],  # ユーザー名をプロフィール名にも保存
+            )
+        return user       
 
-from django import forms
-from django.contrib.auth.models import User
-from .models import Profile
 
 class ProfileForm(forms.ModelForm):
     username = forms.CharField(label='ユーザー名', max_length=150)

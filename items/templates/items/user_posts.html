@@ -1,41 +1,41 @@
-
 {% extends "base.html" %}
 {% block content %}
-<!--  ロゴ -->
+<!-- ロゴ -->
 <h2 class="text-center mb-3">OshiMate</h2>
 
- <!-- パンくずリスト -->
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{% url 'accounts:home' %}">ホーム</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'accounts:mypage' %}">マイページ</a></li>
-      <li class="breadcrumb-item active" aria-current="page">自分の投稿一覧</li>
-    </ol>
-  </nav>
+<!-- パンくずリスト -->
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'accounts:home' %}">ホーム</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'accounts:mypage' %}">マイページ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">自分の投稿一覧</li>
+  </ol>
+</nav>
 
+<!-- タイトル -->
+<h2 class="text-center mb-4">自分の投稿一覧</h2>
 
-  <h2>自分の投稿一覧</h2>
-
-  {% if user_posts %}
-    <ul>
+{% if user_posts %}
+  <div class="container">
+    <div class="row justify-content-center">
       {% for post in user_posts %}
-        <li>
-          <a href="{% url 'items:item_detail' post.id %}">
-            <div class="item-wrapper">
-              <!-- アイテム画像（最初の画像のみ） -->
+        <div class="col-md-4 col-sm-6 mb-4">
+          <a href="{% url 'items:item_detail' post.id %}" class="text-decoration-none text-dark">
+            <div class="card h-100 text-center">
               {% if post.image1 %}
-                <img src="{{ post.image1.url }}" alt="{{ post.name }}" class="img-fluid rounded" style="max-width: 200px; height: auto;">
+                <img src="{{ post.image1.url }}" alt="{{ post.title }}" class="card-img-top" style="max-height: 200px; object-fit: contain;">
               {% endif %}
-              <!-- アイテム名 -->
-              <p><strong>{{ post.title }}</strong></p> <!-- アイテム名を画像の下に追加 -->
-              <!-- アイテムカテゴリ -->
-              <p><strong>カテゴリ：</strong>{{ post.category }}</p>
+              <div class="card-body">
+                <h5 class="card-title">{{ post.title }}</h5>
+                <p class="card-text"><strong>カテゴリ：</strong>{{ post.category }}</p>
+              </div>
             </div>
           </a>
-        </li>
+        </div>
       {% endfor %}
-    </ul>
-  {% else %}
-    <p>投稿がありません。</p>
-  {% endif %}
+    </div>
+  </div>
+{% else %}
+  <p class="text-center">投稿がありません。</p>
+{% endif %}
 {% endblock %}
