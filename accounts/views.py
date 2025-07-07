@@ -12,6 +12,8 @@ from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 
+from django.contrib.auth.views import PasswordChangeView
+from django.urls import reverse_lazy
 
 
 def signup_view(request): #ユーザーがフォームを送信（submit）したときは、リクエストが POST になる。form.is_valid() → バリデーション（未入力・形式エラーなど）をチェック。OKなら form.save() → データベースに新しいユーザーが保存される！
@@ -102,18 +104,18 @@ def email_change_view(request):
     return render(request, 'accounts/email_change.html', {'form': form})
 
 
-@login_required
-def password_change_view(request):
-    if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)
-            messages.success(request, 'パスワードを変更しました。')
-            return redirect('accounts:password_change_done')# 完了ページへ
-    else:
-        form = PasswordChangeForm(request.user)# 初回アクセス時：空のフォームを表示
-    return render(request, 'accounts/password_change.html', {'form': form})
+# @login_required
+# def password_change_view(request):
+#     if request.method == 'POST':
+#         form = PasswordChangeForm(request.user, request.POST)
+#         if form.is_valid():
+#             user = form.save()
+#             update_session_auth_hash(request, user)
+#             messages.success(request, 'パスワードを変更しました。')
+#             return redirect('accounts:password_change_done')# 完了ページへ
+#     else:
+#         form = PasswordChangeForm(request.user)# 初回アクセス時：空のフォームを表示
+#     return render(request, 'accounts/password_change.html', {'form': form})
 
 
 
@@ -137,3 +139,12 @@ def profile_edit_view(request):
         form = ProfileForm(instance=profile, user=request.user)
 
     return render(request, 'accounts/profile_edit.html', {'form': form})
+
+
+class CustomPasswordChangeView(PasswordChangeView):
+    template_name = 'accounts/password_change.html'
+    success_url = reverse_lazy('accounts:home')  # ← ホームに遷移
+    
+    def form_valid(self, form):
+        messages.success(self.request, "パスワードを変更しました")  # これでメッセージを送る
+        return super().form_valid(form)

@@ -5,6 +5,7 @@
 <!--  ロゴ -->
 <h2 class="text-center mb-3">OshiMate</h2>
 
+
 <!-- パンくずリスト -->
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
@@ -14,15 +15,19 @@
   </ol>
 </nav>
 
-<div class="container mt-4">
-  <h2>メールアドレス変更</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <div class="text-center">
-      <button type="submit" class="btn btn-primary mt-3">変更する</button>
-    </div>
-  </form>
+<div class="container d-flex justify-content-center" style="margin-top: 120px; margin-bottom: 60px;">
+  <div class="w-100" style="max-width: 400px;">
+    
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary mt-3 w-100">変更</button>
+      </div>
+    </form>
+  </div>
 </div>
+
+
 {% endblock %}
 
