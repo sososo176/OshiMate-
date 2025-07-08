@@ -35,10 +35,10 @@
 
   <!-- アクションリンク -->
  <div class="d-grid gap-2 my-3">
-  <a href="{% url 'accounts:profile_edit' %}" class="btn btn-secondary w-100">プロフィール編集へ</a>
-  <a href="{% url 'accounts:email_change' %}" class="btn btn-secondary w-100">メールアドレス変更へ</a>
-  <a href="{% url 'accounts:password_change' %}" class="btn btn-secondary w-100">パスワード変更へ</a>
-  <a href="{% url 'items:user_posts' %}" class="btn btn-secondary w-100">自分の投稿一覧へ</a>
+  <a href="{% url 'accounts:profile_edit' %}" class="btn w-100" style="background-color: #f1f1f1; color: #333;">プロフィール編集へ</a>
+  <a href="{% url 'accounts:email_change' %}" class="btn w-100" style="background-color: #f1f1f1; color: #333;">メールアドレス変更へ</a>
+  <a href="{% url 'accounts:password_change' %}" class="btn w-100" style="background-color: #f1f1f1; color: #333;">パスワード変更へ</a>
+  <a href="{% url 'items:user_posts' %}" class="btn w-100" style="background-color: #f1f1f1; color: #333;">自分の投稿一覧へ</a>
 
   <!-- ログアウトだけ赤に -->
   <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#logoutModal">
@@ -60,8 +60,11 @@
         本当にログアウトしますか？
       </div>
       <div class="modal-footer">
-        <a href="{% url 'accounts:logout' %}" class="btn btn-primary">はい</a>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+        <a href="{% url 'accounts:logout' %}" class="btn btn-danger">はい</a>
+        <button type="button" class="btn" style="background-color: #f1f1f1; color: #0d6efd;" data-bs-dismiss="modal">
+          キャンセル
+        </button>
+
         
       </div>
     </div>
