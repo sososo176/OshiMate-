@@ -53,11 +53,34 @@
         {{ list.name }}
       </a>
       <!-- 削除ボタン -->
-      <form method="post" action="{% url 'items:delete_item_list' list.id %}" class="ms-2">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-sm btn-outline-danger"
-          onclick="return confirm('このリストを削除しますか？');">削除</button>
-      </form>
+        <button type="button" class="btn btn-sm btn-outline-danger ms-2"
+                data-bs-toggle="modal" data-bs-target="#deleteModal{{ list.id }}">
+          削除
+        </button>
+
+        <!-- 削除確認モーダル -->
+        <div class="modal fade" id="deleteModal{{ list.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ list.id }}" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel{{ list.id }}">確認</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+              </div>
+              <div class="modal-body">
+                このリストを削除しますか？
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">いいえ</button>
+                <form method="post" action="{% url 'items:delete_item_list' list.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger">はい</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      
     </div>
   {% empty %}
     <p>まだリストが作成されていません。</p>
