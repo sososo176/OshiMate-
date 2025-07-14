@@ -26,7 +26,8 @@ def signup_view(request): #ユーザーがフォームを送信（submit）し�
             # 既に Profile が存在しない場合のみ作成
             if not Profile.objects.filter(user=user).exists():
                 Profile.objects.create(user=user)
-            return redirect('accounts:login')  #登録完了後、ログイン画面（accounts:login）に移動。
+                login(request, user)# 登録後に自動ログイン
+            return redirect('accounts:home')  #登録完了後、ホーム画面に移動。
     else:
         form = SignUpForm() #最初に画面を開いたとき（GET）は、空のフォームを表示するためにこの処理。
 
