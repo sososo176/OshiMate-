@@ -81,6 +81,12 @@ class ProfileForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if self.user:
             self.fields['username'].initial = self.user.username
+            
+    def clean_username(self):  # ユーザー名重複チェック
+        username = self.cleaned_data.get('username')
+        if username and User.objects.filter(username=username).exclude(pk=self.user.pk).exists():
+            raise forms.ValidationError('このユーザー名はすでに使用されています。')
+        return username
 
     def save(self, commit=True):
         # Save profile image

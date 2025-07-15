@@ -33,6 +33,11 @@
     <div class="mb-3">
       <label for="id_username" class="form-label">ユーザー名</label>
       {{ form.username }}
+      {% if form.username.errors %}
+        <div class="text-danger small mt-1">
+          {{ form.username.errors.0 }}
+        </div>
+      {% endif %}
     </div>
 
     <!-- 保存ボタン -->
