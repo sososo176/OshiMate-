@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
 from items.models import Item  # ← items アプリにある Item モデルを使うため追加
-from .forms import SignUpForm, ProfileForm  
+from .forms import SignUpForm, ProfileForm, EmailLoginForm
 from .models import Profile  
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
@@ -61,18 +61,17 @@ def home_view(request):
 # accounts/views.py
 
 
+
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
+        form = EmailLoginForm(request.POST)
+        if form.is_valid():
+            login(request, form.user)  # ← 認証に成功したユーザーでログイン
             return redirect('accounts:home')
-        else:
-            # 認証失敗
-            return render(request, 'accounts/login.html', {'error': 'ログインできませんでした'})
-    return render(request, 'accounts/login.html')
+    else:
+        form = EmailLoginForm()
+
+    return render(request, 'accounts/login.html', {'form': form})
 
 
 def mypage_view(request):

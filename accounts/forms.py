@@ -106,4 +106,25 @@ class EmailChangeForm(forms.Form):
     new_email = forms.EmailField(label='新しいメールアドレス', required=True)
     
     
-   
+
+class EmailLoginForm(forms.Form):
+    email = forms.EmailField(label='メールアドレス', required=True)
+    password = forms.CharField(label='パスワード', widget=forms.PasswordInput)
+
+    def clean(self):
+        email = self.cleaned_data.get('email')
+        password = self.cleaned_data.get('password')
+
+        from django.contrib.auth.models import User
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise forms.ValidationError("メールアドレスまたはパスワードが正しくありません。")
+
+        from django.contrib.auth import authenticate
+        user = authenticate(username=user.username, password=password)
+        if user is None:
+            raise forms.ValidationError("メールアドレスまたはパスワードが正しくありません。")
+
+        self.user = user
+        return self.cleaned_data
