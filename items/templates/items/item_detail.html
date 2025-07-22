@@ -41,7 +41,7 @@
     <h2 class="text-center mb-4">{{ item.title }}</h2>
     <!-- アイテムの内容 -->
     <p><strong>カテゴリ：</strong>{{ item.category }}</p>
-    <p><strong>オススメポイント：</strong>{{ item.description }}</p>
+    <p><strong>オススメポイント：</strong>{{ item.description|linebreaksbr }}</p>
   </div>
 {% endif %}
 

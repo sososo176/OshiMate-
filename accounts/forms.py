@@ -42,6 +42,13 @@ class SignUpForm(UserCreationForm):
         #     'username': 'ユーザー名',
         # }
 
+
+    def clean_email(self):  
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("このメールアドレスは既に使用されています。")
+        return email
+    
     def clean_password1(self):
         password = self.cleaned_data.get('password1')
         if not re.match(r'^(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d]{8,24}$', password):
