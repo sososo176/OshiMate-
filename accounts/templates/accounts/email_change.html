@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block content %}
-<!--  ロゴ -->
+<!-- ロゴ -->
 <h2 class="text-center mb-3">OshiMate</h2>
 
-
 <!-- パンくずリスト -->
-<nav aria-label="breadcrumb">
+<nav aria-label="breadcrumb" class="mb-3 px-3">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'accounts:home' %}">ホーム</a></li>
     <li class="breadcrumb-item"><a href="{% url 'accounts:mypage' %}">マイページ</a></li>
@@ -15,19 +15,29 @@
   </ol>
 </nav>
 
-<div class="container d-flex justify-content-center" style="margin-top: 120px; margin-bottom: 60px;">
-  <div class="w-100" style="max-width: 400px;">
-    
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <div class="text-center">
-        <button type="submit" class="btn btn-primary mt-3 w-100">変更</button>
-      </div>
-    </form>
+<div class="container mt-5 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <h4 class="mb-4 text-center">メールアドレスを変更</h4>
+
+      <form method="post">
+        {% csrf_token %}
+
+        <!-- 新しいメールアドレス -->
+        <div class="mb-3">
+          <label for="{{ form.new_email.id_for_label }}" class="form-label">新しいメールアドレス</label>
+          {{ form.new_email|add_class:"form-control" }}
+          {% if form.new_email.errors %}
+            <div class="text-danger small mt-1">{{ form.new_email.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <!-- 送信ボタン -->
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-primary w-100">変更</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
-
-
 {% endblock %}
-
