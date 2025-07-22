@@ -27,9 +27,9 @@
     {% if user.is_authenticated %}
     <nav class="navbar fixed-bottom navbar-light bg-white border-top">
         <div class="container d-flex justify-content-around">
-            <a href="{% url 'accounts:home' %}" class="nav-link text-secondary">🏠 ホーム</a>
-            <a href="{% url 'accounts:mypage' %}" class="nav-link text-secondary">👤 マイページ</a>
-            <a href="{% url 'items:item_list' %}" class="nav-link text-secondary">📦 持ち物リスト</a>
+            <a href="{% url 'accounts:home' %}" class="nav-link text-secondary text-center" style="font-size: 1.2rem; padding: 8px 0;">🏠<br>ホーム</a>
+            <a href="{% url 'accounts:mypage' %}" class="nav-link text-secondary text-center" style="font-size: 1.2rem; padding: 8px 0;">👤<br>マイページ</a>
+            <a href="{% url 'items:item_list' %}" class="nav-link text-secondary text-center" style="font-size: 1.2rem; padding: 8px 0;">📦<br>持ち物リスト</a>
         </div>
     </nav>
     {% endif %}

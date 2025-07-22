@@ -19,7 +19,7 @@
         </div>
 
         <div class="text-center">
-            <h5 class="mb-2">カテゴリから探す</h5>
+            <h5 class="mt-5 mb-2">カテゴリから探す</h5>
             {% for cat in categories %}
                 <button type="submit" name="category" value="{{ cat }}" class="btn btn-outline-secondary btn-sm m-1 {% if cat == category %}active{% endif %}">
                     {{ cat }}
