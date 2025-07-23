@@ -3,10 +3,10 @@
 {% load custom_tags %}
 
 {% block content %}
-<!-- ✅ ロゴ -->
+<!-- ロゴ -->
 <h2 class="text-center mb-3">OshiMate</h2>
 
-<!-- ✅ パンくずリスト -->
+<!-- パンくずリスト -->
 <nav aria-label="breadcrumb"　class="mb-3">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'accounts:home' %}">ホーム</a></li>
@@ -16,7 +16,7 @@
 </nav>
 
 
-<div class="container py-4 pb-5">
+<div class="container py-4 mb-5" style="padding-bottom: 80px; ">
   
 
   {% if item.user and request.user == item.user %}

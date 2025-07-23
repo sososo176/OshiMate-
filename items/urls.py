@@ -22,6 +22,8 @@ urlpatterns = [
     path('profile/edit/', views.profile_edit_view, name='profile_edit'),
     path('user-posts/', views.user_posts_view, name='user_posts'), 
     path('checklist-item/<int:item_id>/delete/', views.remove_checklist_item, name='remove_checklist_item'),
+    
+    path('list/<int:list_id>/update-name/', views.update_list_name_view, name='update_list_name'),
 
 
 ]

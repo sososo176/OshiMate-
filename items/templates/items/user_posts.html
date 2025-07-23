@@ -4,7 +4,7 @@
 <h2 class="text-center mb-3">OshiMate</h2>
 
 <!-- パンくずリスト -->
-<nav aria-label="breadcrumb"class="mb-3">
+<nav aria-label="breadcrumb" class="mb-3 px-3">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'accounts:home' %}">ホーム</a></li>
     <li class="breadcrumb-item"><a href="{% url 'accounts:mypage' %}">マイページ</a></li>
@@ -38,4 +38,8 @@
 {% else %}
   <p class="text-center">投稿がありません。</p>
 {% endif %}
+
+
+<div style="height: 80px;"></div>  <!-- フッターに被らないための余白 -->
+
 {% endblock %}

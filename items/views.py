@@ -207,7 +207,22 @@ def copy_list_view(request, list_id):
                 item=checklist_item.item,
                 is_checked=False  # コピー時は未チェックにする
             )
+         # メッセージを追加
+        messages.success(request, 'リストをコピーしました！')
         return redirect('items:item_list')
+    
+
+@require_POST
+@login_required
+def update_list_name_view(request, list_id):
+    item_list = get_object_or_404(ItemList, id=list_id, user=request.user, is_tutorial=False)
+    new_name = request.POST.get('new_name')
+    if new_name:
+        item_list.name = new_name
+        item_list.save()
+        messages.success(request, 'リスト名を変更しました！')
+    return redirect('items:item_list_detail', list_id)
+
     
 @login_required
 def delete_item_list(request, list_id):
