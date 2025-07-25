@@ -17,6 +17,9 @@ from django.urls import reverse_lazy
 
 
 def signup_view(request): #ユーザーがフォームを送信（submit）したときは、リクエストが POST になる。form.is_valid() → バリデーション（未入力・形式エラーなど）をチェック。OKなら form.save() → データベースに新しいユーザーが保存される！
+    if request.user.is_authenticated:#ログイン済みならログイン・新規登録ページにアクセスできないようにする
+        return redirect('accounts:home') 
+    
     if request.method == 'POST':
         form = SignUpForm(request.POST) #入力された内容を SignUpForm に渡す。
         if form.is_valid():
@@ -64,6 +67,9 @@ def home_view(request):
 
 
 def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('accounts:home')
+    
     if request.method == 'POST':
         form = EmailLoginForm(request.POST)
         if form.is_valid():

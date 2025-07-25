@@ -24,7 +24,7 @@
     {% endblock %}
 
     <!-- フッター（ログイン後のみ） -->
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and not request.path == '/accounts/login/' and not request.path == '/accounts/signup/' %}
     <nav class="navbar fixed-bottom navbar-light bg-white border-top">
         <div class="container d-flex justify-content-around">
             <a href="{% url 'accounts:home' %}" class="nav-link text-secondary text-center" style="font-size: 1.2rem; padding: 8px 0;">🏠<br>ホーム</a>
