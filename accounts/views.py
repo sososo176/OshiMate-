@@ -44,7 +44,8 @@ def signup_view(request): #ユーザーがフォームを送信（submit）し�
 def home_view(request):
     query = request.GET.get('q')  # URLパラメータから「q=検索キーワード」を取得
     category = request.GET.get('category')# URLパラメータからカテゴリを取得
-    items = Item.objects.all()
+    items = items = Item.objects.all().order_by('-created_at')  # 新しい順に並べる
+
     categories = Item.objects.values_list('category', flat=True).distinct()
     
     if query:
